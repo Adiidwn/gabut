@@ -1,22 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>📍 Share My Location</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>📍 Share My Location</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial; text-align: center; padding: 30px; }
-    button { padding: 12px 20px; font-size: 16px; margin-top: 20px; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f9f9f9, #d6ecff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    p.description {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #444;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.8rem;
+      color: #999;
+    }
   </style>
 </head>
 <body>
   <h1>📍 Share My Location</h1>
+  <p class="description">Tap the button below to send your current location.</p>
   <button onclick="sendLocation()">Get My Location</button>
   <p id="status"></p>
+  <footer>© 2025 Your App</footer>
 
   <script>
     function sendLocation() {
+      const status = document.getElementById("status");
+      status.className = '';
+      status.textContent = "Getting your location...";
+
       if (!navigator.geolocation) {
-        document.getElementById("status").innerText = "Geolocation is not supported.";
+        status.textContent = "Geolocation is not supported by your browser.";
+        status.className = "error";
         return;
       }
 
@@ -37,14 +105,17 @@
           })
           .then(response => response.json())
           .then(res => {
-            document.getElementById("status").innerText = "Location sent successfully!";
+            status.textContent = "✅ Location sent successfully!";
+            status.className = "success";
           })
-          .catch(err => {
-            document.getElementById("status").innerText = "Failed to send location.";
+          .catch(error => {
+            status.textContent = "❌ Failed to send location.";
+            status.className = "error";
           });
         },
         (error) => {
-          document.getElementById("status").innerText = "Could not get location.";
+          status.textContent = "❌ Could not get your location.";
+          status.className = "error";
         }
       );
     }
