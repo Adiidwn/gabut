@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>📍 Share My Location</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; text-align: center; padding: 30px; }
+    button { padding: 12px 20px; font-size: 16px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>📍 Share My Location</h1>
+  <button onclick="sendLocation()">Get My Location</button>
+  <p id="status"></p>
+
+  <script>
+    function sendLocation() {
+      if (!navigator.geolocation) {
+        document.getElementById("status").innerText = "Geolocation is not supported.";
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const data = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            userAgent: navigator.userAgent
+          };
+
+          fetch("https://docs.google.com/spreadsheets/d/1ozcCf9Iqvdpenht9CP4SPYu7f2W8aEJOhEn3UGcr1pA/edit?gid=0#gid=0", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json"
+            }
+          })
+          .then(response => response.json())
+          .then(res => {
+            document.getElementById("status").innerText = "Location sent successfully!";
+          })
+          .catch(err => {
+            document.getElementById("status").innerText = "Failed to send location.";
+          });
+        },
+        (error) => {
+          document.getElementById("status").innerText = "Could not get location.";
+        }
+      );
+    }
+  </script>
+</body>
+</html>
